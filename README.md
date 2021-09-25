@@ -5,10 +5,10 @@ Scripts for model rocket engine thrust measurements and analysis.
 1. Connect RPi and Scale
 2. Connect RPi and Powerbank
 3. Wait for Command Prompt to appear
-4. Wait for 5' for load cell to warm up
-5. `cd /home/pi/rocket-buds`
-6. Place DEAD load on Scale and tie down
-7. `sudo python3 thrust_measurement.py`
+4. `cd /home/pi/rocket-buds`
+5. `sudo python3 thrust_measurement.py`
+6. Place KNOWN weight (933.0gr) on scale and remove when requested
+7. Place DEAD load (rocket engine) on scale and start measurement
 8. IGNITE LOAD
 9. `Ctrl+C` to terminate measurement
 10. Repeat Steps 5 to 8 for further measurements
