@@ -31,3 +31,4 @@ Scripts for model rocket engine thrust measurements and analysis.
 - Multimeter
 - Rope
 - Matches/Lighter
+- Known Weight of 933gr (Can of Peaches)
