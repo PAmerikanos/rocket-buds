@@ -34,10 +34,26 @@ def clean_exit():
 # and I got numbers around 184000 when I added 2kg. So, according to the rule of thirds:
 # If 2000 grams is 184000 then 1000 grams is 184000 / 2000 = 92.
 hx.set_reading_format("MSB", "MSB")
-hx.set_reference_unit(328)
+
+# Calibrate scale before measurement
+print("Initiating scale calibration")
+ARBITRARY_REF_UNIT = 350 # Set arbitrary REF_UNIT
+hx.set_reference_unit(ARBITRARY_REF_UNIT)
 hx.reset()
 hx.tare()
-print("TARE SET - Initiating measurement")
+hx.get_weight(1) # Get random measurement
+time.sleep(3) # Wait for warmup
+
+username = input("PLACE known mass (933gr) on scale and press any key when ready.")
+time.sleep(1)
+relative_weight_933gr = hx.get_weight(1) # Get relative weight of known mass using arbitrary REF_UNIT
+CALIBRATED_REF_UNIT = int(933.0 * ARBITRARY_REF_UNIT / relative_weight_933gr)
+username = input("REMOVE known mass (933gr) from scale and press any key when ready.")
+hx.set_reference_unit(CALIBRATED_REF_UNIT)
+hx.reset()
+hx.tare()
+
+print("Initiating measurement")
 
 try:
     #folder = "/media/pi/paris/Rocketry/Measurements"
