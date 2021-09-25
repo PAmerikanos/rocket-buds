@@ -44,11 +44,13 @@ hx.tare()
 hx.get_weight(1) # Get random measurement
 time.sleep(3) # Wait for warmup
 
-username = input("PLACE known mass (933gr) on scale and press any key when ready.")
+KNOWN_MASS = 933.0
+input("PLACE known mass (" + str(KNOWN_MASS) + "gr) on scale and press any key when ready.")
 time.sleep(1)
-relative_weight_933gr = hx.get_weight(1) # Get relative weight of known mass using arbitrary REF_UNIT
-CALIBRATED_REF_UNIT = int(933.0 * ARBITRARY_REF_UNIT / relative_weight_933gr)
-username = input("REMOVE known mass (933gr) from scale and press any key when ready.")
+relative_weight = hx.get_weight(1) # Get relative weight of known mass using arbitrary REF_UNIT
+CALIBRATED_REF_UNIT = int(KNOWN_MASS * ARBITRARY_REF_UNIT / relative_weight)
+input("REMOVE known mass from scale and press any key when ready.")
+input("PLACE dead load on scale and press any key when ready.")
 hx.set_reference_unit(CALIBRATED_REF_UNIT)
 hx.reset()
 hx.tare()
