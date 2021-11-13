@@ -58,8 +58,7 @@ hx.tare()
 print("Initiating measurement")
 
 try:
-    #folder = "/media/pi/paris/Rocketry/Measurements"
-    folder = "/home/pi/Rocketry/Measurements/"
+    folder = "/home/pi/rocket-buds/Measurements/"
     datetime_str = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
     file = folder + datetime_str + ".txt"
     f = open(file,"a+")
