@@ -44,6 +44,8 @@ hx.tare()
 hx.get_weight(1) # Get random measurement
 time.sleep(3) # Wait for warmup
 
+datetime_str = input("Please enter filename for measurement (YYYYMMDD_DESCRIPTION): ")
+
 KNOWN_MASS = 933.0
 input("PLACE known mass (" + str(KNOWN_MASS) + "gr) on scale and press any key when ready.")
 time.sleep(1)
@@ -59,8 +61,8 @@ print("Initiating measurement")
 
 try:
     folder = "/home/pi/rocket-buds/Measurements/"
-    datetime_str = str(datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-    file = folder + datetime_str + ".txt"
+    #datetime_str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    file = folder + str(datetime_str) + ".txt"
     f = open(file,"a+")
     print("OPENED FILE - Recording")
 except:
