@@ -12,4 +12,7 @@ Connect to headless RPi:
 `pass: 0000`
 
 Copy files from RPi:
-`scp pi@raspberrypi.local:/home/pi/capture/*.jpg /home/pam/Pictures/Rocket_captured_images/`
+`scp pi@raspberrypi.local:/home/pi/capture/*.* /home/pam/Pictures/Rocket_captured_images/`
+
+Capture video:
+`raspivid -o video.h264 -t 10000`
