@@ -2,7 +2,9 @@ import time
 import picamera
 import os
 
-frames = 60
+FRAMERATE_FPS = 30
+DURATION_SEC = 10
+frames = FRAMERATE_FPS * DURATION_SEC
 
 def filenames():
     frame = 0
@@ -12,7 +14,7 @@ def filenames():
 
 with picamera.PiCamera() as camera:
     camera.resolution = (1024, 768)
-    camera.framerate = 30
+    camera.framerate = FRAMERATE_FPS
     camera.start_preview()
     # Give the camera some warm-up time
     time.sleep(2)
