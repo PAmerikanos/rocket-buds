@@ -1,12 +1,13 @@
 import time
 import picamera
+import os
 
 frames = 60
 
 def filenames():
     frame = 0
     while frame < frames:
-        yield 'image%02d.jpg' % frame
+        yield os.path.join(os.path.expanduser('~'), 'capture', 'image%02d.jpg') % frame
         frame += 1
 
 with picamera.PiCamera() as camera:
