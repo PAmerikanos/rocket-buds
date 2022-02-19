@@ -4,7 +4,7 @@ import time
 import picamera
 import os
 
-RESOLUTION = (1080, 1920)
+RESOLUTION = (1024, 768) #(1080, 1920)
 FRAMERATE_FPS = 30
 DURATION_SEC = 10
 frames = FRAMERATE_FPS * DURATION_SEC
