@@ -16,3 +16,6 @@ Copy files from RPi:
 
 Capture video:
 `raspivid -o video.h264 -t 10000`
+
+Capture sequence:
+https://picamera.readthedocs.io/en/release-1.10/recipes2.html#unencoded-image-capture-yuv-format
