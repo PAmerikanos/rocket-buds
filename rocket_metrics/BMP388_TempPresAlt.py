@@ -3,18 +3,12 @@
 import time
 import smbus
 import math
-from mpu6050 import mpu6050
 
 
 """
 To install SMBUS:
     sudo apt-get update
     sudo apt-get install python3-smbus
-"""
-
-"""
-sudo i2cdetect -y 1
-i2c address is 0x77
 """
 
 # define BMP388 Device I2C address
@@ -168,7 +162,9 @@ class BMP388(object):
     def compensate_pressure(self, adc_P):
         partial_data1 = self.T_fine * self.T_fine
         partial_data2 = partial_data1 / 0x40
-        partial_data3 = partial_data2 * self.T    a1 * 0x10
+        partial_data3 = partial_data2 * self.T_fine / 256
+        partial_data4 = self.P8 * partial_data3 / 0x20
+        partial_data5 = self.P7 * partial_data1 * 0x10
         partial_data6 = self.P6 * self.T_fine * 4194304
         offset = self.P5 * 140737488355328 + partial_data4 \
             + partial_data5 + partial_data6
