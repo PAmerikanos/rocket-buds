@@ -23,7 +23,8 @@ if __name__ == '__main__':
     bmp388_sensor = BMP388()
 
     with open('/home/pi/rocket-buds/sensor_measurements/' + get_curr_time() + ".txt", mode="w") as file:
-        file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m')
+        file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m\n')
+        
         while True:
             time.sleep(0.5)
 
