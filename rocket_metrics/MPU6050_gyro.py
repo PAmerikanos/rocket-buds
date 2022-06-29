@@ -11,7 +11,6 @@ To install mpu6050 library:
     pip3 install mpu6050-raspberrypi
 """
 
-
 if __name__ == '__main__':
     import time
 
