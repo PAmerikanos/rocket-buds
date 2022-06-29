@@ -22,8 +22,8 @@ if __name__ == '__main__':
     mpu6050_sensor = mpu6050(0x68)
     bmp388_sensor = BMP388()
 
-    print('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m')
     with open('/home/pi/rocket-buds/sensor_measurements/' + get_curr_time() + ".txt", mode="w") as file:
+        file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m')
         while True:
             time.sleep(0.5)
 
