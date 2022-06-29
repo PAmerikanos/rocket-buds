@@ -28,7 +28,7 @@ if __name__ == '__main__':
         gyro_data = mpu6050_sensor.get_gyro_data()
         temperature, pressure, altitude = bmp388_sensor.get_temperature_and_pressure_and_altitude()
 
-        time_curr = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        time_curr = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
         accel_x = accel_data['x']
         accel_y = accel_data['y']
         accel_z = accel_data['z']
