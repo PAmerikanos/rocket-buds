@@ -20,5 +20,9 @@ if __name__ == '__main__':
 
     while True:
         time.sleep(0.5)
-        all_data = sensor.get_all_data()
-        print('Temperature = %.1fC | Pressure = %.2fPa | Altitude = %.2fm '%(temperature/100.0, pressure/100.0, altitude/100.0))
+        accel_data = sensor.get_accel_data()
+        gyro_data = sensor.get_gyro_data()
+        print('Acceleration:')
+        print(accel_data)
+        print('Gyro:')
+        print(gyro_data)
