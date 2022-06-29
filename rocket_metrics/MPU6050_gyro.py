@@ -9,7 +9,6 @@ from mpu6050 import mpu6050
 To install mpu6050 library:
     sudo apt-get install python3-pip
     pip3 install mpu6050-raspberrypi
-
 """
 
 

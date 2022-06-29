@@ -12,6 +12,11 @@ To install SMBUS:
     sudo apt-get install python3-smbus
 """
 
+"""
+sudo i2cdetect -y 1
+i2c address is 0x77
+"""
+
 # define BMP388 Device I2C address
 
 I2C_ADD_BMP388_AD0_LOW = 0x76
