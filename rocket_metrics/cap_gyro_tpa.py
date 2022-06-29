@@ -42,7 +42,7 @@ if __name__ == '__main__':
             pres_pa = pressure / 100.0
             alt_m = altitude / 100.0
 
-            measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {alt_m}'
+            measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {alt_m}\n'
             file.write(measurement_str)
 
             print(f'{time_curr}: RECORDING')
