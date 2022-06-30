@@ -2,7 +2,7 @@
 # Based on HX711 for Raspbery Py
 import time
 from datetime import datetime
-import sys
+import sys, os
 import RPi.GPIO as GPIO
 from hx711py.hx711 import HX711
 
@@ -60,7 +60,7 @@ hx.tare()
 print("Initiating measurement")
 
 try:
-    folder = "/home/pi/rocket-buds/Measurements/"
+    folder = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'thrust_measurements')
     #datetime_str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     file = folder + str(datetime_str) + ".txt"
     f = open(file,"a+")

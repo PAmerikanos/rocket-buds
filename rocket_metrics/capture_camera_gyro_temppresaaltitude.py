@@ -28,7 +28,7 @@ with PiCamera() as camera:
     camera.start_preview()
     
     try:
-        with open('/home/pi/rocket-buds/sensor_measurements/' + get_curr_time() + ".txt", mode="w") as file:
+        with open(os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements', get_curr_time() + ".txt", mode="w")) as file:
             file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m\n')
             
             while True:
@@ -52,7 +52,7 @@ with PiCamera() as camera:
                 measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {alt_m}\n'
                 file.write(measurement_str)
 
-                img_path = os.path.join(os.path.expanduser('~'), 'capture', time_curr + '.jpg')
+                img_path = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'captures', time_curr + '.jpg')
                 camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
                 print(f'{time_curr}: RECORDING & CAPTURING')
