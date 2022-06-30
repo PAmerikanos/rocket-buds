@@ -28,7 +28,7 @@ with PiCamera() as camera:
     camera.start_preview()
     
     try:
-        with open(os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements', get_curr_time() + ".txt", mode="w")) as file:
+        with open(os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements', get_curr_time() + ".txt"), mode="w") as file:
             file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m\n')
             
             while True:
