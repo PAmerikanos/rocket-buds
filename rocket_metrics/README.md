@@ -16,10 +16,8 @@ Copy files from RPi:
 
 Capture all sensor and camera data:
 Under ~/rocket-buds run:
-```
-python rocket_metrics/capture_camera_gyro_temppresaaltitude.py
-```
-All data is stored under `~/rocket-buds/data`
+`python rocket_metrics/capture_camera_gyro_temppresaaltitude.py`
+All data is stored under `~/rocket-buds/data`.
 
 Capture video:
 `raspivid -o video.h264 -t 10000`
