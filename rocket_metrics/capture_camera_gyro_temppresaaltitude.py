@@ -28,7 +28,14 @@ with PiCamera() as camera:
     camera.start_preview()
     
     try:
-        with open(os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements', get_curr_time() + ".txt"), mode="w") as file:
+        sensor_dir = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements')
+        if not os.path.exists(sensor_dir):
+            os.makedirs(sensor_dir)
+        capture_dir = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'captures')
+        if not os.path.exists(capture_dir):
+            os.makedirs(capture_dir)
+
+        with open(os.path.join(sensor_dir, get_curr_time() + ".txt"), mode="w") as file:
             file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m\n')
             
             while True:
@@ -52,7 +59,7 @@ with PiCamera() as camera:
                 measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {alt_m}\n'
                 file.write(measurement_str)
 
-                img_path = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'captures', time_curr + '.jpg')
+                img_path = os.path.join(capture_dir, time_curr + '.jpg')
                 camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
                 print(f'{time_curr}: RECORDING & CAPTURING')
