@@ -52,7 +52,10 @@ with PiCamera() as camera:
                 measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {alt_m}\n'
                 file.write(measurement_str)
 
-                camera.capture(os.path.join(os.path.expanduser('~'), 'capture', time_curr + '.jpg'), format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=False, bayer=False)
+                print("A")
+                img_path = os.path.join(os.path.expanduser('~'), 'capture', time_curr + '.jpg')
+                camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=False, bayer=False)
+                print("B")
 
                 print(f'{time_curr}: RECORDING & CAPTURING')
 
