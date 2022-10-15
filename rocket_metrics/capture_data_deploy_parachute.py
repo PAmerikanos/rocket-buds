@@ -35,6 +35,7 @@ if __name__ == '__main__':
     ground_alt_m = altitude / 100.0
 
     # Setup GPIO for charge relay activation
+    END_SPARK = False
     CHARGE_PIN = 23
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
@@ -81,11 +82,15 @@ with PiCamera() as camera:
                 print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m')
 
                 # Activate charge when at least 10m above ground, and altitude is not increasing
-                MINIMUM_SAFE_HEIGHT = 1.0
-                SPARK_DURATION = 1.0
-                if MINIMUM_SAFE_HEIGHT < current_alt_m < previous_alt_m:
+                MINIMUM_SAFE_HEIGHT = 2.0 # 3.0
+                MEASUREMENT_ERROR = 1.0 # 2.0
+                SPARK_DURATION = 2.0 # 5.0
+                if MINIMUM_SAFE_HEIGHT < current_alt_m # < previous_alt_m + MEASUREMENT_ERROR:
                     GPIO.output(CHARGE_PIN,  GPIO.HIGH)
-                    time.sleep(SPARK_DURATION) # TODO: Replace with flag lest we interrupt recording
+                    start_spark_time = time.time()
+                    END_SPARK = True
+                    #time.sleep(SPARK_DURATION) # TODO: Replace with flag lest we interrupt recording
+                else:
                     GPIO.output(CHARGE_PIN,  GPIO.LOW)
                 
                 previous_alt_m = current_alt_m
