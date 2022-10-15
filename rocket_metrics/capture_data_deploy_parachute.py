@@ -68,7 +68,7 @@ with PiCamera() as camera:
                 gyro_z = gyro_data['z']
                 temp_c = temperature / 100.0
                 pres_pa = pressure / 100.0
-                alt_m = altitude / 100.0
+                current_alt_m = altitude / 100.0 - ground_alt_m
                 
                 # Write measurements to file
                 measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {alt_m}\n'
@@ -78,17 +78,17 @@ with PiCamera() as camera:
                 img_path = os.path.join(capture_dir, time_curr + '.jpg')
                 camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
-                print(f'{time_curr}: RECORDING & CAPTURING @{alt_m}m')
+                print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m')
 
                 # Activate charge when at least 10m above ground, and altitude is not increasing
-                MINIMUM_SAFE_HEIGHT = 2
-                SPARK_DURATION = 1
-                if (alt_m > ground_alt_m + MINIMUM_SAFE_HEIGHT) and (alt_m < previous_alt_m):
+                MINIMUM_SAFE_HEIGHT = 1.0
+                SPARK_DURATION = 1.0
+                if MINIMUM_SAFE_HEIGHT < current_alt_m < previous_alt_m:
                     GPIO.output(CHARGE_PIN,  GPIO.HIGH)
-                    time.sleep(SPARK_DURATION)
+                    time.sleep(SPARK_DURATION) # TODO: Replace with flag lest we interrupt recording
                     GPIO.output(CHARGE_PIN,  GPIO.LOW)
                 
-                previous_alt_m = alt_m
+                previous_alt_m = current_alt_m
 
     finally:
         camera.stop_preview()
