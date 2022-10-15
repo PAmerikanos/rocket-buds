@@ -88,6 +88,7 @@ with PiCamera() as camera:
                 SPARK_DURATION = 2.0 # 5.0
                 if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m < previous_alt_m - MEASUREMENT_ERROR:
                     GPIO.output(CHARGE_PIN,  GPIO.HIGH)
+                    print("Start spark")
                     start_spark_time = time.time()
                     END_SPARK = True
                     #time.sleep(SPARK_DURATION) # TODO: Replace with flag lest we interrupt recording
@@ -95,6 +96,7 @@ with PiCamera() as camera:
                 if END_SPARK:
                     if time.time() - start_spark_time >= SPARK_DURATION:
                         GPIO.output(CHARGE_PIN,  GPIO.LOW)
+                        print("Stop spark")
                 
                 previous_alt_m = current_alt_m
 
