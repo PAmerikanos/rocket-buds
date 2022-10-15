@@ -31,6 +31,7 @@ if __name__ == '__main__':
     # Initialize sensors and get ground altitude
     mpu6050_sensor = mpu6050(0x68)
     bmp388_sensor = BMP388()
+    time.sleep(3) # warmup
     _, _, altitude = bmp388_sensor.get_temperature_and_pressure_and_altitude()
     ground_alt_m = altitude / 100.0
 
@@ -83,7 +84,7 @@ with PiCamera() as camera:
 
                 # Activate charge when at least 10m above ground, and altitude is not increasing
                 MINIMUM_SAFE_HEIGHT = 1.0 # 3.0
-                MEASUREMENT_ERROR = 1.0 # 2.0
+                MEASUREMENT_ERROR = 0.5 # 2.0
                 SPARK_DURATION = 2.0 # 5.0
                 if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m < previous_alt_m - MEASUREMENT_ERROR:
                     GPIO.output(CHARGE_PIN,  GPIO.HIGH)
