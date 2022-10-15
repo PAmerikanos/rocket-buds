@@ -85,7 +85,7 @@ with PiCamera() as camera:
                 MINIMUM_SAFE_HEIGHT = 2.0 # 3.0
                 MEASUREMENT_ERROR = 1.0 # 2.0
                 SPARK_DURATION = 2.0 # 5.0
-                if MINIMUM_SAFE_HEIGHT < current_alt_m # < previous_alt_m + MEASUREMENT_ERROR:
+                if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m: # < previous_alt_m + MEASUREMENT_ERROR:
                     GPIO.output(CHARGE_PIN,  GPIO.HIGH)
                     start_spark_time = time.time()
                     END_SPARK = True
