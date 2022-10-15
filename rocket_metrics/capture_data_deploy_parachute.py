@@ -78,13 +78,14 @@ with PiCamera() as camera:
                 img_path = os.path.join(capture_dir, time_curr + '.jpg')
                 camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
-                print(f'{time_curr}: RECORDING & CAPTURING')
+                print(f'{time_curr}: RECORDING & CAPTURING @{alt_m}m')
 
                 # Activate charge when at least 10m above ground, and altitude is not increasing
-                MINIMUM_SAFE_HEIGHT = 1
-                if alt_m > ground_alt_m + MINIMUM_SAFE_HEIGHT:
+                MINIMUM_SAFE_HEIGHT = 2
+                SPARK_DURATION = 1
+                if (alt_m > ground_alt_m + MINIMUM_SAFE_HEIGHT) and (alt_m < previous_alt_m):
                     GPIO.output(CHARGE_PIN,  GPIO.HIGH)
-                    time.sleep(5)
+                    time.sleep(SPARK_DURATION)
                     GPIO.output(CHARGE_PIN,  GPIO.LOW)
                 
                 previous_alt_m = alt_m
