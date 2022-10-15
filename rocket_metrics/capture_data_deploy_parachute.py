@@ -82,7 +82,7 @@ with PiCamera() as camera:
                 print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m')
 
                 # Activate charge when at least 10m above ground, and altitude is not increasing
-                MINIMUM_SAFE_HEIGHT = 2.0 # 3.0
+                MINIMUM_SAFE_HEIGHT = 1.0 # 3.0
                 MEASUREMENT_ERROR = 1.0 # 2.0
                 SPARK_DURATION = 2.0 # 5.0
                 if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m < previous_alt_m - MEASUREMENT_ERROR:
