@@ -71,7 +71,7 @@ with PiCamera() as camera:
                 current_alt_m = altitude / 100.0 - ground_alt_m
                 
                 # Write measurements to file
-                measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {alt_m}\n'
+                measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {current_alt_m}\n'
                 file.write(measurement_str)
 
                 # Write photos to file
