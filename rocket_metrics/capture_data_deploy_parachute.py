@@ -86,13 +86,15 @@ with PiCamera() as camera:
                 MINIMUM_SAFE_HEIGHT = 1.0 # 3.0
                 MEASUREMENT_ERROR = 0.5 # 2.0
                 SPARK_DURATION = 2.0 # 5.0
-                if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m < previous_alt_m - MEASUREMENT_ERROR:
-                    GPIO.output(CHARGE_PIN,  GPIO.HIGH)
-                    print("Start spark")
-                    start_spark_time = time.time()
-                    END_SPARK = True
-                    #time.sleep(SPARK_DURATION) # TODO: Replace with flag lest we interrupt recording
-                
+                if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m:
+                    print("Above minimum safe height")
+                    if current_alt_m < previous_alt_m - MEASUREMENT_ERROR:
+                        GPIO.output(CHARGE_PIN,  GPIO.HIGH)
+                        print("Falling - Start spark")
+                        start_spark_time = time.time()
+                        END_SPARK = True
+                        #time.sleep(SPARK_DURATION) # TODO: Replace with flag lest we interrupt recording
+                    
                 if END_SPARK:
                     if time.time() - start_spark_time >= SPARK_DURATION:
                         GPIO.output(CHARGE_PIN,  GPIO.LOW)
