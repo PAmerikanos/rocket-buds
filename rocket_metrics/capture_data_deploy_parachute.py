@@ -21,14 +21,6 @@ def get_curr_time():
 
 
 def setup():
-    # Assert dirs for data storage are available
-    sensor_dir = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements')
-    if not os.path.exists(sensor_dir):
-        os.makedirs(sensor_dir)
-    capture_dir = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'captures')
-    if not os.path.exists(capture_dir):
-        os.makedirs(capture_dir)
-
     # Initialize sensors and get ground altitude
     mpu6050_sensor = mpu6050(0x68)
     bmp388_sensor = BMP388()
@@ -47,6 +39,15 @@ def setup():
 
 if __name__ == '__main__':
     setup()
+    
+    # Assert dirs for data storage are available
+    sensor_dir = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements')
+    if not os.path.exists(sensor_dir):
+        os.makedirs(sensor_dir)
+    capture_dir = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'captures')
+    if not os.path.exists(capture_dir):
+        os.makedirs(capture_dir)
+
     # Initialize PiCamera for image capturing
     with PiCamera() as camera:
         camera.start_preview()
