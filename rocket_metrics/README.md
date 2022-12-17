@@ -1,9 +1,38 @@
 # Rocket Metrics module
 
-## Setup RPi Guides
+## Setup
 - https://desertbot.io/blog/headless-raspberry-pi-zero-w-2-ssh-wifi-setup-mac-windows-10-steps
 - https://www.digikey.gr/en/maker/blogs/2021/getting-started-with-the-raspberry-pi-zero-2-w
 - https://howchoo.com/pi/how-to-take-a-picture-with-your-raspberry-pi
+
+```
+To install mpu6050 library:
+    sudo apt-get install python3-pip
+    pip3 install mpu6050-raspberrypi
+```
+
+### Connections
+```
+GPIO 23 -> SDA
+GPIO 24 -> SCL
+
+MPU 6050 Gyro
+    VCC: 5V
+    GND: GND
+    SCL: GPIO serial clock (I2C)
+    SDA: GPIO serial data (I2C)
+
+BMP 388 Temp
+    GND: GND
+    3Vo: 3.3V
+    SCL: GPIO serial clock (I2C)
+    SDA: GPIO serial data (I2C)
+
+Charger
+    USB: USB cable
+    Vout+-: RPi USB/GPIO
+    BAT+-: Battery
+```
 
 ## Operation
 ### Connect to headless RPi
@@ -14,7 +43,7 @@ password: 0000
 
 ### Capture sensor & camera data
 ```
-python rocket_metrics/capture_camera_gyro_temppresaaltitude.py
+python rocket-buds/rocket_metrics/capture_camera_gyro_temppresaaltitude.py
 ```
 
 ### Capture only video

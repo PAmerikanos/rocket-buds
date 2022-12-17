@@ -10,11 +10,9 @@ from mpu6050 import mpu6050
 from BMP388_TempPresAlt import BMP388
 import RPi.GPIO as GPIO
 
-"""
-To install mpu6050 library:
-    sudo apt-get install python3-pip
-    pip3 install mpu6050-raspberrypi
-"""
+MINIMUM_SAFE_HEIGHT = 1.5 # 3.0
+MEASUREMENT_ERROR = 1.5 # 1.5
+SPARK_DURATION = 5.0 # 5.0
 
 def get_curr_time():
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
@@ -83,9 +81,6 @@ with PiCamera() as camera:
                 print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m')
 
                 # Activate charge when at least 10m above ground, and altitude is not increasing
-                MINIMUM_SAFE_HEIGHT = 1.5 # 3.0
-                MEASUREMENT_ERROR = 1.5 # 1.5
-                SPARK_DURATION = 5.0 # 5.0
                 if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m:
                     print("Above minimum safe height")
                     if current_alt_m < previous_alt_m - MEASUREMENT_ERROR:
