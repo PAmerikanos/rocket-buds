@@ -52,6 +52,7 @@ if __name__ == '__main__':
                 
                 previous_alt_m = ground_alt_m
                 start_run_time = time.time()
+                ignition_status = ""
                 
                 while True:
                     # Gather data at 2 Hz
