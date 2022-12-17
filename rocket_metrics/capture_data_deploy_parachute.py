@@ -13,7 +13,7 @@ import RPi.GPIO as GPIO
 
 MINIMUM_SAFE_HEIGHT = 1.0 # 3.0
 MEASUREMENT_ERROR = 0.5 # 1.5
-SPARK_DURATION = 5.0 # 5.0
+SPARK_DURATION = 2.0 # 5.0
 
 
 def get_curr_time():
