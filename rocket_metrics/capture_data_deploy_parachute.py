@@ -10,8 +10,8 @@ from mpu6050 import mpu6050
 from BMP388_TempPresAlt import BMP388
 import RPi.GPIO as GPIO
 
-MINIMUM_SAFE_HEIGHT = 1.0 # 3.0
-MEASUREMENT_ERROR = 0.5 # 1.5
+MINIMUM_SAFE_HEIGHT = 4.5 # 3.0
+MEASUREMENT_ERROR = 1.5 # 1.5
 SPARK_DURATION = 2.0 # 5.0
 
 def get_curr_time():
