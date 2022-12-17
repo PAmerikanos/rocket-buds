@@ -48,7 +48,7 @@ if __name__ == '__main__':
         try:
             # Open data file and add header
             with open(os.path.join(sensor_dir, get_curr_time() + ".csv"), mode="w") as file:
-                file.write('time_curr,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp_c,pres_pa,alt_m\n')
+                file.write('time_curr,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp_c,pres_pa,alt_m,ignition_status\n')
                 
                 previous_alt_m = ground_alt_m
                 start_run_time = time.time()
@@ -71,10 +71,6 @@ if __name__ == '__main__':
                     temp_c = temperature / 100.0
                     pres_pa = pressure / 100.0
                     current_alt_m = altitude / 100.0 - ground_alt_m
-                    
-                    # Write measurements to file
-                    measurement_str = f'{time_curr},{accel_x},{accel_y},{accel_z},{gyro_x},{gyro_y},{gyro_z},{temp_c},{pres_pa},{current_alt_m}\n'
-                    file.write(measurement_str)
 
                     # Write photos to file
                     img_path = os.path.join(capture_dir, time_curr + '.jpg')
@@ -90,15 +86,19 @@ if __name__ == '__main__':
                             GPIO.output(CHARGE_PIN,  GPIO.HIGH)
                             start_spark_time = time.time()
                             print("IGNITION: Start")
-                            file.write("IGNITION: Start")
+                            ignition_status = "Start"
                             END_SPARK = True
                             
                     if END_SPARK:
                         if time.time() - start_spark_time >= SPARK_DURATION_s:
                             GPIO.output(CHARGE_PIN,  GPIO.LOW)
                             print("IGNITION: Stop")
-                            file.write("IGNITION: Stop")
+                            ignition_status = "Stop"
                             END_SPARK = False
+                    
+                    # Write measurements to file
+                    measurement_str = f'{time_curr},{accel_x},{accel_y},{accel_z},{gyro_x},{gyro_y},{gyro_z},{temp_c},{pres_pa},{current_alt_m},{ignition_status}\n'
+                    file.write(measurement_str)
                     
                     previous_alt_m = current_alt_m
 
