@@ -3,6 +3,7 @@
 import time
 import datetime
 import os
+import sys
 from picamera import PiCamera
 from mpu6050 import mpu6050
 from BMP388_TempPresAlt import BMP388
@@ -12,6 +13,7 @@ MINIMUM_SAFE_HEIGHT_m = 4.5 # 3.0
 MEASUREMENT_ERROR_m = 1.5 # 1.5
 SPARK_DURATION_s = 2.0 # 5.0
 CHARGE_DELAY_s = 1.0 #5.0
+AUTO_SHUTDOWN_s = 60.0
 
 def get_curr_time():
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
@@ -49,6 +51,7 @@ if __name__ == '__main__':
                 file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m\n')
                 
                 previous_alt_m = ground_alt_m
+                start_run_time = time.time()
                 
                 while True:
                     # Gather data at 2 Hz
@@ -98,6 +101,9 @@ if __name__ == '__main__':
                             END_SPARK = False
                     
                     previous_alt_m = current_alt_m
+
+                    if time.time() - start_run_time >= AUTO_SHUTDOWN_s:
+                        sys.exit()
 
         finally:
             camera.stop_preview()
