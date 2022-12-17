@@ -96,6 +96,7 @@ if __name__ == '__main__':
                         if time.time() - start_spark_time >= SPARK_DURATION:
                             GPIO.output(CHARGE_PIN,  GPIO.LOW)
                             print("IGNITION: Stop")
+                            END_SPARK = False
                     
                     previous_alt_m = current_alt_m
 
