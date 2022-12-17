@@ -47,8 +47,8 @@ if __name__ == '__main__':
         
         try:
             # Open data file and add header
-            with open(os.path.join(sensor_dir, get_curr_time() + ".txt"), mode="w") as file:
-                file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m\n')
+            with open(os.path.join(sensor_dir, get_curr_time() + ".csv"), mode="w") as file:
+                file.write('time_curr,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp_c,pres_pa,alt_m\n')
                 
                 previous_alt_m = ground_alt_m
                 start_run_time = time.time()
@@ -73,7 +73,7 @@ if __name__ == '__main__':
                     current_alt_m = altitude / 100.0 - ground_alt_m
                     
                     # Write measurements to file
-                    measurement_str = f'{time_curr}; {accel_x}; {accel_y}; {accel_z}; {gyro_x}; {gyro_y}; {gyro_z}; {temp_c}; {pres_pa}, {current_alt_m}\n'
+                    measurement_str = f'{time_curr},{accel_x},{accel_y},{accel_z},{gyro_x},{gyro_y},{gyro_z},{temp_c},{pres_pa},{current_alt_m}\n'
                     file.write(measurement_str)
 
                     # Write photos to file
