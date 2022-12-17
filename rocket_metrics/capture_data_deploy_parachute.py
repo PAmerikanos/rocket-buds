@@ -32,7 +32,7 @@ if __name__ == '__main__':
     time.sleep(3) # warmup
     _, _, altitude = bmp388_sensor.get_temperature_and_pressure_and_altitude()
     ground_alt_m = altitude / 100.0
-    max_alt_m = 0.0
+    #max_alt_m = 0.0
 
     # Setup GPIO for charge relay activation
     END_SPARK = False
@@ -50,7 +50,7 @@ if __name__ == '__main__':
             with open(os.path.join(sensor_dir, get_curr_time() + ".txt"), mode="w") as file:
                 file.write('time_curr; accel_x; accel_y; accel_z; gyro_x; gyro_y; gyro_z; temp_c; pres_pa; alt_m\n')
                 
-                #previous_alt_m = ground_alt_m
+                previous_alt_m = ground_alt_m
                 
                 while True:
                     # Gather data at 2 Hz
@@ -81,12 +81,12 @@ if __name__ == '__main__':
 
                     print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m')
 
-                    if current_alt_m > max_alt_m: max_alt_m = current_alt_m
+                    #if current_alt_m > max_alt_m: max_alt_m = current_alt_m
 
                     # Activate charge when at least 10m above ground, and altitude is not increasing
                     if MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR < current_alt_m:
                         print("ARMED: Above minimum safe height")
-                        if current_alt_m < max_alt_m - MEASUREMENT_ERROR: #previous_alt_m
+                        if current_alt_m < previous_alt_m - MEASUREMENT_ERROR:
                             GPIO.output(CHARGE_PIN,  GPIO.HIGH)
                             print("IGNITION: Start")
                             start_spark_time = time.time()
@@ -97,7 +97,7 @@ if __name__ == '__main__':
                             GPIO.output(CHARGE_PIN,  GPIO.LOW)
                             print("IGNITION: Stop")
                     
-                    #previous_alt_m = current_alt_m
+                    previous_alt_m = current_alt_m
 
         finally:
             camera.stop_preview()
