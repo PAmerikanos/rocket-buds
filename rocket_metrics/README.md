@@ -1,26 +1,31 @@
 # Rocket Metrics module
 
-## Setup RPi
-
-Guides:
+## Setup RPi Guides
 - https://desertbot.io/blog/headless-raspberry-pi-zero-w-2-ssh-wifi-setup-mac-windows-10-steps
 - https://www.digikey.gr/en/maker/blogs/2021/getting-started-with-the-raspberry-pi-zero-2-w
 - https://howchoo.com/pi/how-to-take-a-picture-with-your-raspberry-pi
 
-Connect to headless RPi:
-`ssh pi@raspberrypi.local`
-`pass: 0000`
+## Operation
+### Connect to headless RPi
+```
+ssh pi@raspberrypi.local
+password: 0000
+```
 
-Copy files from RPi:
-`scp -r pi@raspberrypi.local:/home/pi/rocket-buds/data/ /mnt/SSD_Data/My_Projects/rocket-buds/`
+### Capture sensor & camera data
+```
+python rocket_metrics/capture_camera_gyro_temppresaaltitude.py
+```
 
-Capture all sensor and camera data:
-Under ~/rocket-buds run:
-`python rocket_metrics/capture_camera_gyro_temppresaaltitude.py`
-All data is stored under `~/rocket-buds/data`.
-
-Capture video:
-`raspivid -o video.h264 -t 10000`
-
-Capture sequence:
+### Capture only video
+```
+raspivid -o video.h264 -t 10000
+```
+Capture sequence: 
 https://picamera.readthedocs.io/en/release-1.10/recipes2.html#unencoded-image-capture-yuv-format
+
+
+### Sync sensor & cam data from RPi
+```
+scp -r pi@raspberrypi.local:/home/pi/rocket-buds/data/ /mnt/SSD_Data/My_Projects/rocket-buds/
+```
