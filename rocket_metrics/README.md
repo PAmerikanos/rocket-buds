@@ -41,6 +41,11 @@ ssh pi@raspberrypi.local
 password: 0000
 ```
 
+### Deploy full capturing and ejection charge
+```
+python rocket_metrics/capture_data_deploy_parachute.py 
+```
+
 ### Capture sensor & camera data
 ```
 python rocket-buds/rocket_metrics/capture_camera_gyro_temppresaaltitude.py
