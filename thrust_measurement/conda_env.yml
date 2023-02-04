@@ -1,0 +1,11 @@
+name: rocket_buds
+channels:
+  - defaults
+dependencies:
+  - ipykernel
+  - numpy
+  - pandas
+  - matplotlib
+  - scipy
+  - bokeh
+prefix: /home/pam/anaconda3/envs/rocket_buds
