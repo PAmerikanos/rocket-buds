@@ -37,9 +37,13 @@ if __name__ == '__main__':
     # Setup GPIO for charge relay activation
     END_SPARK = False
     CHARGE_PIN = 23
+    LED_UP_PIN = 16
+    LED_DOWN_PIN = 20
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
     GPIO.setup(CHARGE_PIN, GPIO.OUT)
+    GPIO.setup(LED_UP_PIN, GPIO.OUT)
+    GPIO.setup(LED_DOWN_PIN, GPIO.OUT)
 
     # Initialize PiCamera for image capturing
     with PiCamera() as camera:
@@ -78,6 +82,15 @@ if __name__ == '__main__':
                     camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
                     print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m')
+
+                    # Illuminate LEDs according to rocket attitude
+                    if current_alt_m < previous_alt_m:
+                        GPIO.output(LED_UP_PIN, GPIO.HIGH)
+                        GPIO.output(LED_DOWN_PIN, GPIO.LOW)
+                    else:
+                        GPIO.output(LED_UP_PIN, GPIO.LOW)
+                        GPIO.output(LED_DOWN_PIN, GPIO.HIGH)
+
 
                     # Activate charge when at least 10m above ground, and altitude is not increasing
                     if MINIMUM_SAFE_HEIGHT_m + MEASUREMENT_ERROR_m < current_alt_m:
