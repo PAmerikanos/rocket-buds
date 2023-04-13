@@ -87,7 +87,7 @@ if __name__ == '__main__':
                     attitude = "UP" if current_alt_m > previous_1_alt_m else "DOWN"
                     print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m - {attitude}')
 
-                    # ARM CHARGE & LEDs 
+                    # Arm CHARGE & LEDs when at least 10m above ground
                     if MINIMUM_SAFE_HEIGHT_m + MEASUREMENT_ERROR_m < current_alt_m:
                         print("ARMED: Above minimum safe height")
 
@@ -99,10 +99,8 @@ if __name__ == '__main__':
                             GPIO.output(LED_UP_PIN, GPIO.LOW)
                             GPIO.output(LED_DOWN_PIN, GPIO.HIGH)
 
-                        # Activate charge when at least 10m above ground, and altitude is not increasing
-                        # MEASUREMENT_ERROR_m was added due to false positives from the sensor
-                        #if current_alt_m < previous_1_alt_m - MEASUREMENT_ERROR_m:
-                        if (current_alt_m < previous_1_alt_m) and (current_alt_m < previous_2_alt_m) and (current_alt_m < previous_3_alt_m):
+                        # Activate charge if altitude is not increasing for 3 measurements and spark has not been lit before
+                        if (current_alt_m < previous_1_alt_m) and (current_alt_m < previous_2_alt_m) and (current_alt_m < previous_3_alt_m) and ignition_status == "":
                             time.sleep(CHARGE_DELAY_s)
                             GPIO.output(CHARGE_PIN,  GPIO.HIGH)
                             start_spark_time = time.time()
