@@ -13,7 +13,7 @@ MINIMUM_SAFE_HEIGHT_m = 4.5 # 3.0
 MEASUREMENT_ERROR_m = 1.5 # 1.5
 SPARK_DURATION_s = 2.0 # 5.0
 CHARGE_DELAY_s = 1.0 #5.0
-AUTO_SHUTDOWN_s = 60.0
+AUTO_SHUTDOWN_s = 120.0
 
 def get_curr_time():
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
@@ -48,16 +48,16 @@ if __name__ == '__main__':
     # Initialize PiCamera for image capturing
     with PiCamera() as camera:
         camera.start_preview()
-        
+
         try:
             # Open data file and add header
             with open(os.path.join(sensor_dir, get_curr_time() + ".csv"), mode="w") as file:
                 file.write('time_curr,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp_c,pres_pa,alt_m,ignition_status\n')
-                
+
                 previous_alt_m = ground_alt_m
                 start_run_time = time.time()
                 ignition_status = ""
-                
+
                 while True:
                     # Gather data at 2 Hz
                     time.sleep(0.5)
@@ -81,15 +81,17 @@ if __name__ == '__main__':
                     img_path = os.path.join(capture_dir, time_curr + '.jpg')
                     camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
-                    print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m')
-
                     # Illuminate LEDs according to rocket attitude
-                    if current_alt_m < previous_alt_m:
+                    if current_alt_m > previous_alt_m:
                         GPIO.output(LED_UP_PIN, GPIO.HIGH)
                         GPIO.output(LED_DOWN_PIN, GPIO.LOW)
+                        attitude = "UP"
                     else:
                         GPIO.output(LED_UP_PIN, GPIO.LOW)
                         GPIO.output(LED_DOWN_PIN, GPIO.HIGH)
+                        attitude = "DOWN"
+
+                    print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m - {attitude}')
 
 
                     # Activate charge when at least 10m above ground, and altitude is not increasing
@@ -102,21 +104,23 @@ if __name__ == '__main__':
                             print("IGNITION: Start")
                             ignition_status = "Start"
                             END_SPARK = True
-                            
+
                     if END_SPARK:
                         if time.time() - start_spark_time >= SPARK_DURATION_s:
                             GPIO.output(CHARGE_PIN,  GPIO.LOW)
                             print("IGNITION: Stop")
                             ignition_status = "Stop"
                             END_SPARK = False
-                    
+
                     # Write measurements to file
                     measurement_str = f'{time_curr},{accel_x},{accel_y},{accel_z},{gyro_x},{gyro_y},{gyro_z},{temp_c},{pres_pa},{current_alt_m},{ignition_status}\n'
                     file.write(measurement_str)
-                    
+
                     previous_alt_m = current_alt_m
 
                     if time.time() - start_run_time >= AUTO_SHUTDOWN_s:
+                        GPIO.output(LED_UP_PIN, GPIO.LOW)
+                        GPIO.output(LED_DOWN_PIN, GPIO.LOW)
                         sys.exit()
 
         finally:
