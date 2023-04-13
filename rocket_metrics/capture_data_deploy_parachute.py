@@ -9,8 +9,8 @@ from mpu6050 import mpu6050
 from BMP388_TempPresAlt import BMP388
 import RPi.GPIO as GPIO
 
-MINIMUM_SAFE_HEIGHT_m = 4.5 # 3.0
-MEASUREMENT_ERROR_m = 1.5 # 1.5
+MINIMUM_SAFE_HEIGHT_m = 3.0 # 3.0
+MEASUREMENT_ERROR_m = 1.0 # 1.5
 SPARK_DURATION_s = 2.0 # 5.0
 CHARGE_DELAY_s = 1.0 #5.0
 AUTO_SHUTDOWN_s = 120.0
@@ -54,7 +54,10 @@ if __name__ == '__main__':
             with open(os.path.join(sensor_dir, get_curr_time() + ".csv"), mode="w") as file:
                 file.write('time_curr,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp_c,pres_pa,alt_m,ignition_status\n')
 
-                previous_alt_m = ground_alt_m
+                previous_1_alt_m = ground_alt_m
+                previous_2_alt_m = ground_alt_m
+                previous_3_alt_m = ground_alt_m
+
                 start_run_time = time.time()
                 ignition_status = ""
 
@@ -81,18 +84,15 @@ if __name__ == '__main__':
                     img_path = os.path.join(capture_dir, time_curr + '.jpg')
                     camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
-
-                    attitude = "UP" if current_alt_m > previous_alt_m else "DOWN"
-
+                    attitude = "UP" if current_alt_m > previous_1_alt_m else "DOWN"
                     print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m - {attitude}')
-
 
                     # ARM CHARGE & LEDs 
                     if MINIMUM_SAFE_HEIGHT_m + MEASUREMENT_ERROR_m < current_alt_m:
                         print("ARMED: Above minimum safe height")
 
                         # Illuminate LEDs according to rocket attitude
-                        if current_alt_m > previous_alt_m:
+                        if current_alt_m > previous_1_alt_m:
                             GPIO.output(LED_UP_PIN, GPIO.HIGH)
                             GPIO.output(LED_DOWN_PIN, GPIO.LOW)
                         else:
@@ -101,7 +101,8 @@ if __name__ == '__main__':
 
                         # Activate charge when at least 10m above ground, and altitude is not increasing
                         # MEASUREMENT_ERROR_m was added due to false positives from the sensor
-                        if current_alt_m < previous_alt_m - MEASUREMENT_ERROR_m:
+                        #if current_alt_m < previous_1_alt_m - MEASUREMENT_ERROR_m:
+                        if (current_alt_m < previous_1_alt_m) and (current_alt_m < previous_2_alt_m) and (current_alt_m < previous_3_alt_m):
                             time.sleep(CHARGE_DELAY_s)
                             GPIO.output(CHARGE_PIN,  GPIO.HIGH)
                             start_spark_time = time.time()
@@ -121,7 +122,9 @@ if __name__ == '__main__':
                     measurement_str = f'{time_curr},{accel_x},{accel_y},{accel_z},{gyro_x},{gyro_y},{gyro_z},{temp_c},{pres_pa},{current_alt_m},{ignition_status}\n'
                     file.write(measurement_str)
 
-                    previous_alt_m = current_alt_m
+                    previous_3_alt_m = previous_2_alt_m
+                    previous_2_alt_m = previous_1_alt_m
+                    previous_1_alt_m = current_alt_m
 
                     if time.time() - start_run_time >= AUTO_SHUTDOWN_s:
                         GPIO.output(LED_UP_PIN, GPIO.LOW)
@@ -129,5 +132,5 @@ if __name__ == '__main__':
                         camera.stop_preview()
                         sys.exit()
 
-        #finally:
-        #    camera.stop_preview()
+        finally:
+            camera.stop_preview()
