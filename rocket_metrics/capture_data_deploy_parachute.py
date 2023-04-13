@@ -107,6 +107,9 @@ if __name__ == '__main__':
                             print("IGNITION: Start")
                             ignition_status = "Start"
                             END_SPARK = True
+                    else: # Unarm LEDs if below min safe height
+                            GPIO.output(LED_UP_PIN, GPIO.LOW)
+                            GPIO.output(LED_DOWN_PIN, GPIO.LOW)
 
                     # Stop spark after 2 seconds
                     if END_SPARK:
