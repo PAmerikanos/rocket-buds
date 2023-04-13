@@ -81,22 +81,26 @@ if __name__ == '__main__':
                     img_path = os.path.join(capture_dir, time_curr + '.jpg')
                     camera.capture(img_path, format='jpeg', use_video_port=False, resize=None, quality=85, thumbnail=None, bayer=False)
 
-                    # Illuminate LEDs according to rocket attitude
-                    if current_alt_m > previous_alt_m:
-                        GPIO.output(LED_UP_PIN, GPIO.HIGH)
-                        GPIO.output(LED_DOWN_PIN, GPIO.LOW)
-                        attitude = "UP"
-                    else:
-                        GPIO.output(LED_UP_PIN, GPIO.LOW)
-                        GPIO.output(LED_DOWN_PIN, GPIO.HIGH)
-                        attitude = "DOWN"
+
+                    attitude = "UP" if current_alt_m > previous_alt_m else "DOWN"
 
                     print(f'{time_curr}: RECORDING & CAPTURING @{current_alt_m}m - {attitude}')
 
 
-                    # Activate charge when at least 10m above ground, and altitude is not increasing
+                    # ARM CHARGE & LEDs 
                     if MINIMUM_SAFE_HEIGHT_m + MEASUREMENT_ERROR_m < current_alt_m:
                         print("ARMED: Above minimum safe height")
+
+                        # Illuminate LEDs according to rocket attitude
+                        if current_alt_m > previous_alt_m:
+                            GPIO.output(LED_UP_PIN, GPIO.HIGH)
+                            GPIO.output(LED_DOWN_PIN, GPIO.LOW)
+                        else:
+                            GPIO.output(LED_UP_PIN, GPIO.LOW)
+                            GPIO.output(LED_DOWN_PIN, GPIO.HIGH)
+
+                        # Activate charge when at least 10m above ground, and altitude is not increasing
+                        # MEASUREMENT_ERROR_m was added due to false positives from the sensor
                         if current_alt_m < previous_alt_m - MEASUREMENT_ERROR_m:
                             time.sleep(CHARGE_DELAY_s)
                             GPIO.output(CHARGE_PIN,  GPIO.HIGH)
@@ -105,6 +109,7 @@ if __name__ == '__main__':
                             ignition_status = "Start"
                             END_SPARK = True
 
+                    # Stop spark after 2 seconds
                     if END_SPARK:
                         if time.time() - start_spark_time >= SPARK_DURATION_s:
                             GPIO.output(CHARGE_PIN,  GPIO.LOW)
@@ -121,7 +126,8 @@ if __name__ == '__main__':
                     if time.time() - start_run_time >= AUTO_SHUTDOWN_s:
                         GPIO.output(LED_UP_PIN, GPIO.LOW)
                         GPIO.output(LED_DOWN_PIN, GPIO.LOW)
+                        camera.stop_preview()
                         sys.exit()
 
-        finally:
-            camera.stop_preview()
+        #finally:
+        #    camera.stop_preview()
