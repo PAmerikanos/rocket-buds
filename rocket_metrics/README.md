@@ -4,6 +4,8 @@
 - https://desertbot.io/blog/headless-raspberry-pi-zero-w-2-ssh-wifi-setup-mac-windows-10-steps
 - https://www.digikey.gr/en/maker/blogs/2021/getting-started-with-the-raspberry-pi-zero-2-w
 - https://howchoo.com/pi/how-to-take-a-picture-with-your-raspberry-pi
+- https://grantwinney.com/using-pullup-and-pulldown-resistors-on-the-raspberry-pi/
+- https://raspberrypi.stackexchange.com/a/108723
 
 ```
 To install mpu6050 library:
@@ -62,4 +64,10 @@ https://picamera.readthedocs.io/en/release-1.10/recipes2.html#unencoded-image-ca
 ### Sync sensor & cam data from RPi
 ```
 scp -r pi@raspberrypi.local:/home/pi/rocket-buds/data/ /mnt/SSD_Data/My_Projects/rocket-buds/
+```
+
+
+### Monitor standby service on boot
+```
+systemctl status myscript.service
 ```
