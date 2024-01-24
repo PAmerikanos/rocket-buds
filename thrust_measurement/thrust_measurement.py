@@ -60,13 +60,12 @@ hx.tare()
 print("Initiating measurement")
 
 try:
-    folder = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'thrust_measurements')
     #datetime_str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    file = folder + str(datetime_str) + ".txt"
-    f = open(file,"a+")
+    filename = './measurements/' + str(datetime_str) + ".txt"
+    f = open(filename, "a+")
     print("OPENED FILE - Recording")
-except:
-    print("ERROR opening file - Check USB drive")
+except Exception as e:
+    print(e)
     clean_exit()
 
 
