@@ -33,23 +33,35 @@ def clean_exit():
 # In this case, 92 is 1 gram because, with 1 as a reference unit I got numbers near 0 without any weight
 # and I got numbers around 184000 when I added 2kg. So, according to the rule of thirds:
 # If 2000 grams is 184000 then 1000 grams is 184000 / 2000 = 92.
+
+# To find ARBITRARY_REF_UNIT:
+# 1. Set KNOWN_MASS to the real measured weight and set ARBITRARY_REF_UNIT = 1.
+# 2. Place weight on scale.
+# 3. Run script once and print out relative_weight.
+# 4. Calculate relative_weight/KNOWN_MASS (rerun 2-3 times to get an average).
+# 5. Set ARBITRARY_REF_UNIT to the calculated value from #4.
+
 hx.set_reading_format("MSB", "MSB")
 
 # Calibrate scale before measurement
 print("Initiating scale calibration")
-ARBITRARY_REF_UNIT = 350 # Set arbitrary REF_UNIT
+ARBITRARY_REF_UNIT = 40.0 # Set arbitrary REF_UNIT - 350 for 933.0 (can of peaches) / 40.0 for 5195.0 (beer keg)
 hx.set_reference_unit(ARBITRARY_REF_UNIT)
 hx.reset()
 hx.tare()
+# Wait for warmup
+for i in range(5, 0, -1):
+    print(i)
+    time.sleep(1)
 hx.get_weight(1) # Get random measurement
-time.sleep(3) # Wait for warmup
 
 datetime_str = input("Please enter filename for measurement (YYYYMMDD_DESCRIPTION): ")
 
-KNOWN_MASS = 933.0
+KNOWN_MASS = 5195.0 #933.0
 input("PLACE known mass (" + str(KNOWN_MASS) + "gr) on scale and press any key when ready.")
 time.sleep(1)
 relative_weight = hx.get_weight(1) # Get relative weight of known mass using arbitrary REF_UNIT
+print(f"Relative weight: {relative_weight}")
 CALIBRATED_REF_UNIT = int(KNOWN_MASS * ARBITRARY_REF_UNIT / relative_weight)
 input("REMOVE known mass from scale and press any key when ready.")
 input("PLACE dead load on scale and press any key when ready.")
