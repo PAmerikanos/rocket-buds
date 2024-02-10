@@ -1,7 +1,11 @@
-#! /usr/bin/python2
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 # Based on HX711 for Raspbery Py
+
 import time
 from datetime import datetime
+from tqdm import tqdm
 import sys, os
 import RPi.GPIO as GPIO
 from hx711py.hx711 import HX711
@@ -50,12 +54,11 @@ hx.set_reference_unit(ARBITRARY_REF_UNIT)
 hx.reset()
 hx.tare()
 # Wait for warmup
-for i in range(5, 0, -1):
-    print(i)
+for _ in tqdm(range(15),desc="Waiting for cell to warm up."):
     time.sleep(1)
 hx.get_weight(1) # Get random measurement
 
-datetime_str = input("Please enter filename for measurement (YYYYMMDD_DESCRIPTION): ")
+exp_desc = input("Please enter experiment description (no spaces): ")
 
 KNOWN_MASS = 5195.0 #933.0
 input("PLACE known mass (" + str(KNOWN_MASS) + "gr) on scale and press any key when ready.")
@@ -65,6 +68,10 @@ print(f"Relative weight: {relative_weight}")
 CALIBRATED_REF_UNIT = int(KNOWN_MASS * ARBITRARY_REF_UNIT / relative_weight)
 input("REMOVE known mass from scale and press any key when ready.")
 input("PLACE dead load on scale and press any key when ready.")
+
+for _ in tqdm(range(180),desc="Waiting for cell to stabilize."):
+    time.sleep(1)
+
 hx.set_reference_unit(CALIBRATED_REF_UNIT)
 hx.reset()
 hx.tare()
@@ -72,8 +79,8 @@ hx.tare()
 print("Initiating measurement")
 
 try:
-    #datetime_str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    filename = './measurements/' + str(datetime_str) + ".txt"
+    datetime_str = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f"./measurements/{datetime_str}_{exp_desc}.txt"
     f = open(filename, "a+")
     print("OPENED FILE - Recording")
 except Exception as e:
