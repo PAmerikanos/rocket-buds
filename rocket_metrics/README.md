@@ -7,10 +7,19 @@
 - https://grantwinney.com/using-pullup-and-pulldown-resistors-on-the-raspberry-pi/
 - https://raspberrypi.stackexchange.com/a/108723
 
-```
 To install mpu6050 library:
-    sudo apt-get install python3-pip
-    pip3 install mpu6050-raspberrypi
+```
+sudo apt-get install python3-pip
+pip3 install mpu6050-raspberrypi
+```
+
+Enable i2c:
+```
+sudo apt update
+sudo apt full-upgrade
+sudo apt install -y i2c-tools python3-smbus
+sudo raspi-config > Interfacing options
+sudo i2cdetect -y 1
 ```
 
 ### Connections
