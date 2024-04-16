@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import RPi.GPIO as GPIO
+import sys
 
 channel = 26
 LED_UP_PIN = 16
@@ -16,6 +17,7 @@ def button_callback(channel):
     elif previous_flag == "Record":
         #GPIO.output(LED_UP_PIN, GPIO.HIGH)
         print("Clean GPIO")
+        sys.exit()
         #previous_flag = "Standby"
 
 GPIO.setwarnings(False)
