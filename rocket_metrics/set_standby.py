@@ -4,25 +4,19 @@ import RPi.GPIO as GPIO
 
 channel = 26
 LED_UP_PIN = 16
-flag = False
-
-# def loop_A():
-#     while True:
-#         print("A")
-
-# def loop_B():
-#     while True:
-#         print("B")
+previous_flag = "Standby"
 
 def button_callback(channel):
     print("Button was pushed!")
-    global flag
-    if flag:
-        GPIO.output(LED_UP_PIN, GPIO.LOW)
-        flag = False
-    else:
-        GPIO.output(LED_UP_PIN, GPIO.HIGH)
-        flag = True
+    global previous_flag
+    if previous_flag == "Standby":
+        #GPIO.output(LED_UP_PIN, GPIO.LOW)
+        print("Set GPIO")
+        previous_flag = "Record"
+    elif previous_flag == "Record":
+        #GPIO.output(LED_UP_PIN, GPIO.HIGH)
+        print("Clean GPIO")
+        previous_flag = "Standby"
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -32,10 +26,10 @@ GPIO.setup(LED_UP_PIN, GPIO.OUT)
 GPIO.add_event_detect(channel,GPIO.RISING,callback=button_callback,bouncetime=1000)
 
 while True:
-    if flag:
-        print("YES")
-    elif not flag:
-        print("NO")
+    if previous_flag == "Standby":
+        print("Standby")
+    elif previous_flag == "Record":
+        print("Record")
 
 #message = input("Do sth")
 
