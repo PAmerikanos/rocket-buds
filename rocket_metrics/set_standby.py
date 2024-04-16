@@ -6,14 +6,24 @@ channel = 26
 LED_UP_PIN = 16
 flag = False
 
+def loop_A():
+    while True:
+        print("A")
+
+def loop_B():
+    while True:
+        print("B")
+
 def button_callback(channel):
     print("Button was pushed!")
     global flag
     if flag:
         GPIO.output(LED_UP_PIN, GPIO.LOW)
+        loop_A()
         flag = False
     else:
         GPIO.output(LED_UP_PIN, GPIO.HIGH)
+        loop_B()
         flag = True
 
 GPIO.setwarnings(False)

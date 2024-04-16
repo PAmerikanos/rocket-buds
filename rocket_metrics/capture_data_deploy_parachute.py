@@ -13,10 +13,28 @@ MINIMUM_SAFE_HEIGHT_m = 3.0 # 3.0
 MEASUREMENT_ERROR_m = 1.0 # 1.5
 SPARK_DURATION_s = 2.0 # 5.0
 CHARGE_DELAY_s = 1.0 #5.0
-AUTO_SHUTDOWN_s = 120.0
+END_SPARK = False
+#AUTO_SHUTDOWN_s = 120.0
+TERMINATE_PROCESS = False
+
+# GPIO pins
+CHARGE_PIN = 23
+LED_UP_PIN = 16
+LED_DOWN_PIN = 20
+BUTTON_PIN = 26
 
 def get_curr_time():
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+
+def button_callback(channel):
+    print("Button was pushed!")
+    global TERMINATE_PROCESS
+    if TERMINATE_PROCESS:
+        GPIO.output(LED_UP_PIN, GPIO.LOW)
+        TERMINATE_PROCESS = False
+    else:
+        GPIO.output(LED_UP_PIN, GPIO.HIGH)
+        TERMINATE_PROCESS = True
 
 if __name__ == '__main__':
     # Assert dirs for data storage are available
@@ -35,21 +53,19 @@ if __name__ == '__main__':
     ground_alt_m = altitude / 100.0
 
     # Setup GPIO for charge relay activation
-    END_SPARK = False
-    CHARGE_PIN = 23
-    LED_UP_PIN = 16
-    LED_DOWN_PIN = 20
-    GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
     GPIO.setup(CHARGE_PIN, GPIO.OUT)
     GPIO.setup(LED_UP_PIN, GPIO.OUT)
     GPIO.setup(LED_DOWN_PIN, GPIO.OUT)
+    GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.add_event_detect(BUTTON_PIN, GPIO.RISING, callback=button_callback, bouncetime=1000)
 
-    # Initialize PiCamera for image capturing
-    with PiCamera() as camera:
-        camera.start_preview()
+    try:
+        # Initialize PiCamera for image capturing
+        with PiCamera() as camera:
+            camera.start_preview()
 
-        try:
             # Open data file and add header
             with open(os.path.join(sensor_dir, get_curr_time() + ".csv"), mode="w") as file:
                 file.write('time_curr,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temp_c,pres_pa,alt_m,ignition_status\n')
@@ -127,11 +143,13 @@ if __name__ == '__main__':
                     previous_2_alt_m = previous_1_alt_m
                     previous_1_alt_m = current_alt_m
 
-                    if time.time() - start_run_time >= AUTO_SHUTDOWN_s:
+                    #if time.time() - start_run_time >= AUTO_SHUTDOWN_s:
+                    if TERMINATE_PROCESS:
                         GPIO.output(LED_UP_PIN, GPIO.LOW)
                         GPIO.output(LED_DOWN_PIN, GPIO.LOW)
+                        GPIO.cleanup()
                         camera.stop_preview()
                         sys.exit()
 
-        finally:
-            camera.stop_preview()
+    finally:
+        GPIO.cleanup()
