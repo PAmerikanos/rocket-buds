@@ -16,7 +16,7 @@ def button_callback(channel):
     elif previous_flag == "Record":
         #GPIO.output(LED_UP_PIN, GPIO.HIGH)
         print("Clean GPIO")
-        previous_flag = "Standby"
+        #previous_flag = "Standby"
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
