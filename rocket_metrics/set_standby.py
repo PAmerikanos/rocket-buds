@@ -5,22 +5,21 @@ import sys
 
 channel = 26
 LED_UP_PIN = 16
-loop_flag = True
-previous_flag = "Standby"
+LOOP_FLAG = True
+PREVIOUS_FLAG = "Standby"
 
 def button_callback(channel):
     print("Button was pushed!")
-    global loop_flag
-    global previous_flag
-    if previous_flag == "Standby":
+    global LOOP_FLAG
+    global PREVIOUS_FLAG
+    if PREVIOUS_FLAG == "Standby":
         #GPIO.output(LED_UP_PIN, GPIO.LOW)
-        print("Set GPIO")
-        previous_flag = "Record"
-    elif previous_flag == "Record":
+        #print("Set GPIO")
+        PREVIOUS_FLAG = "Record"
+    elif PREVIOUS_FLAG == "Record":
         #GPIO.output(LED_UP_PIN, GPIO.HIGH)
         print("Clean GPIO")
-        loop_flag = False
-        #previous_flag = "Standby"
+        LOOP_FLAG = False
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -29,13 +28,11 @@ GPIO.setup(LED_UP_PIN, GPIO.OUT)
 
 GPIO.add_event_detect(channel,GPIO.RISING,callback=button_callback,bouncetime=1000)
 
-while loop_flag:
-    if previous_flag == "Standby":
+while LOOP_FLAG:
+    if PREVIOUS_FLAG == "Standby":
         print("Standby")
-    elif previous_flag == "Record":
+    elif PREVIOUS_FLAG == "Record":
         print("Record")
-
-#message = input("Do sth")
 
 GPIO.cleanup()
 sys.exit()
