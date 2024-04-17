@@ -10,7 +10,7 @@
 To install mpu6050 library:
 ```
 sudo apt-get install python3-pip
-pip3 install mpu6050-raspberrypi
+sudo -H pip install mpu6050-raspberrypi
 ```
 
 Enable i2c:
@@ -22,7 +22,11 @@ sudo raspi-config > Interfacing options
 sudo i2cdetect -y 1
 ```
 
-In `sudo raspi-config` enable I2C and legacy RPIcam
+In `sudo raspi-config` enable I2C and legacy RPIcam.
+Setup Crontab `sudo crontab -e`:
+```
+@reboot sleep 15; python3 /home/pi/rocket-buds/rocket_metrics/capture_data_deploy_parachute.py >> /home/pi/crontab.log 2>&1
+```
 
 ### Connections
 ```
