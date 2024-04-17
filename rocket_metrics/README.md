@@ -22,6 +22,8 @@ sudo raspi-config > Interfacing options
 sudo i2cdetect -y 1
 ```
 
+In `sudo raspi-config` enable I2C and legacy RPIcam
+
 ### Connections
 ```
 GPIO 23 -> SDA
@@ -73,10 +75,4 @@ https://picamera.readthedocs.io/en/release-1.10/recipes2.html#unencoded-image-ca
 ### Sync sensor & cam data from RPi
 ```
 scp -r pi@raspberrypi.local:/home/pi/rocket-buds/data/ /mnt/SSD_Data/My_Projects/rocket-buds/
-```
-
-
-### Monitor standby service on boot
-```
-systemctl status myscript.service
 ```

@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 import time
-import smbus
-import math
 from mpu6050 import mpu6050
 
 """
@@ -12,8 +11,6 @@ To install mpu6050 library:
 """
 
 if __name__ == '__main__':
-    import time
-
     sensor = mpu6050(0x68)
 
     while True:

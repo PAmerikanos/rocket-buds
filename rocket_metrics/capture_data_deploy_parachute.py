@@ -6,7 +6,7 @@ import os
 import sys
 from picamera import PiCamera
 from mpu6050 import mpu6050
-from BMP388_TempPresAlt import BMP388
+from utils.BMP388_TempPresAlt import BMP388
 import RPi.GPIO as GPIO
 
 MINIMUM_SAFE_HEIGHT_m = 3.0 # 3.0
@@ -30,16 +30,15 @@ def get_curr_time():
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S_%f")
 
 def button_callback(channel):
-    print("Button was pushed!")
     global LOOP_FLAG
     global PREVIOUS_FLAG
     if PREVIOUS_FLAG == "Standby":
+        print("BUTTON PUSH: Start recording")
         #GPIO.output(LED_UP_PIN, GPIO.LOW)
-        #print("Set GPIO")
         PREVIOUS_FLAG = "Record"
     elif PREVIOUS_FLAG == "Record":
+        print("BUTTON PUSH: Stop recording & clean GPIO")
         #GPIO.output(LED_UP_PIN, GPIO.HIGH)
-        print("Clean GPIO")
         GPIO.output(LED_UP_PIN, GPIO.LOW)
         GPIO.output(LED_DOWN_PIN, GPIO.LOW)
         GPIO.cleanup()
@@ -91,7 +90,12 @@ if __name__ == '__main__':
                 #while True:
                 while LOOP_FLAG:
                     if PREVIOUS_FLAG == "Standby":
-                        pass
+                        GPIO.output(LED_UP_PIN, GPIO.HIGH)
+                        GPIO.output(LED_DOWN_PIN, GPIO.LOW)
+                        time.sleep(0.5)
+                        GPIO.output(LED_UP_PIN, GPIO.LOW)
+                        GPIO.output(LED_DOWN_PIN, GPIO.HIGH)
+                        time.sleep(0.5)
                     elif PREVIOUS_FLAG == "Record":
                         # Gather data at 2 Hz
                         time.sleep(0.5)
