@@ -52,7 +52,7 @@ hx.set_reading_format("MSB", "MSB")
 # Calibrate scale before measurement
 print("Initiating scale calibration. Select known mass:")
 for i, key in enumerate(ARBITRARY_REF_UNIT_MAP):
-    print(f"{i} - {key["type"]}")
+    print(f"{i} - {key['type']}")
 choice = int(input("Enter the number corresponding to the desired option:"))
 ARBITRARY_REF_UNIT = ARBITRARY_REF_UNIT_MAP[choice]["ref_unit"]
 hx.set_reference_unit(ARBITRARY_REF_UNIT)
