@@ -39,20 +39,26 @@ def clean_exit():
 # If 2000 grams is 184000 then 1000 grams is 184000 / 2000 = 92.
 
 # To find ARBITRARY_REF_UNIT:
-# 1. Set KNOWN_MASS to the real measured weight and set ARBITRARY_REF_UNIT = 1.
+# 1. Set KNOWN_MASS_gr to the real measured weight and set ARBITRARY_REF_UNIT = 1.
 # 2. Place weight on scale.
 # 3. Run script once and print out relative_weight.
-# 4. Calculate relative_weight/KNOWN_MASS (rerun 2-3 times to get an average).
+# 4. Calculate relative_weight/KNOWN_MASS_gr (rerun 2-3 times to get an average).
 # 5. Set ARBITRARY_REF_UNIT to the calculated value from #4.
+ARBITRARY_REF_UNIT_MAP = [{"type": "BEER KEG", "ref_unit": 40.0, "mass_gr": 5195.0},
+                          {"type": "PEACH CAN", "ref_unit": 350.0, "mass_gr": 933.0}]
 
 hx.set_reading_format("MSB", "MSB")
 
 # Calibrate scale before measurement
-print("Initiating scale calibration")
-ARBITRARY_REF_UNIT = 40.0 # Set arbitrary REF_UNIT - 350 for 933.0 (can of peaches) / 40.0 for 5195.0 (beer keg)
+print("Initiating scale calibration. Select known mass:")
+for i, key in enumerate(ARBITRARY_REF_UNIT_MAP):
+    print(f"{i} - {key["type"]}")
+choice = int(input("Enter the number corresponding to the desired option:"))
+ARBITRARY_REF_UNIT = ARBITRARY_REF_UNIT_MAP[choice]["ref_unit"]
 hx.set_reference_unit(ARBITRARY_REF_UNIT)
 hx.reset()
 hx.tare()
+
 # Wait for warmup
 for _ in tqdm(range(15),desc="Waiting for cell to warm up."):
     time.sleep(1)
@@ -60,12 +66,16 @@ hx.get_weight(1) # Get random measurement
 
 exp_desc = input("Please enter experiment description (no spaces): ")
 
-KNOWN_MASS = 5195.0 #933.0
-input("PLACE known mass (" + str(KNOWN_MASS) + "gr) on scale and press any key when ready.")
+KNOWN_MASS_gr = ARBITRARY_REF_UNIT_MAP[choice]["mass_gr"]
+input("PLACE known mass (" + str(KNOWN_MASS_gr) + "gr) on scale and press any key when ready.")
 time.sleep(1)
 relative_weight = hx.get_weight(1) # Get relative weight of known mass using arbitrary REF_UNIT
 print(f"Relative weight: {relative_weight}")
-CALIBRATED_REF_UNIT = int(KNOWN_MASS * ARBITRARY_REF_UNIT / relative_weight)
+if relative_weight == 0.0:
+    print('Unable to measure relative weight. Check scale cables & connection.')
+    clean_exit()
+
+CALIBRATED_REF_UNIT = int(KNOWN_MASS_gr * ARBITRARY_REF_UNIT / relative_weight)
 input("REMOVE known mass from scale and press any key when ready.")
 input("PLACE dead load on scale and press any key when ready.")
 
