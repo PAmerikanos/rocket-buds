@@ -4,6 +4,7 @@ import time
 import datetime
 import os
 import sys
+import subprocess
 from picamera import PiCamera
 from mpu6050 import mpu6050
 from utils.BMP388_TempPresAlt import BMP388
@@ -47,6 +48,14 @@ def button_callback(channel):
         LOOP_FLAG = False
 
 if __name__ == '__main__':
+    # Kill any zombie camera processes
+    try:
+        subprocess.run(['sudo', 'killall', 'raspivid'], stderr=subprocess.DEVNULL)
+        subprocess.run(['sudo', 'killall', 'raspistill'], stderr=subprocess.DEVNULL)
+        time.sleep(1)
+    except:
+        pass
+    
     # Assert dirs for data storage are available
     sensor_dir = os.path.join(os.path.expanduser('~'), 'rocket-buds', 'data', 'sensor_measurements')
     if not os.path.exists(sensor_dir):
