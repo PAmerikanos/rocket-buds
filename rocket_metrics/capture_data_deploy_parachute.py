@@ -48,11 +48,14 @@ def button_callback(channel):
         LOOP_FLAG = False
 
 if __name__ == '__main__':
-    # Kill any zombie camera processes
+    # Kill any zombie camera processes and stale Python scripts
     try:
-        subprocess.run(['sudo', 'killall', 'raspivid'], stderr=subprocess.DEVNULL)
-        subprocess.run(['sudo', 'killall', 'raspistill'], stderr=subprocess.DEVNULL)
-        time.sleep(1)
+        subprocess.run(['sudo', 'killall', '-9', 'raspivid'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        subprocess.run(['sudo', 'killall', '-9', 'raspistill'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        subprocess.run(['sudo', 'killall', '-9', 'raspiyuv'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        # Kill any python processes using picamera (except this one)
+        subprocess.run(['sudo', 'fuser', '-k', '/dev/vchiq'], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        time.sleep(2)
     except:
         pass
     
@@ -87,10 +90,24 @@ if __name__ == '__main__':
     
     GPIO.add_event_detect(BUTTON_PIN, GPIO.RISING, callback=button_callback, bouncetime=1000)
 
+    # Initialize camera with retry logic
+    camera = None
+    for attempt in range(3):
+        try:
+            camera = PiCamera()
+            print(f"Camera initialized successfully on attempt {attempt + 1}")
+            break
+        except Exception as e:
+            print(f"Camera initialization attempt {attempt + 1} failed: {e}")
+            if attempt < 2:
+                time.sleep(2)
+            else:
+                print("Failed to initialize camera after 3 attempts. Exiting.")
+                GPIO.cleanup()
+                sys.exit(1)
+
     try:
-        # Initialize PiCamera for image capturing
-        with PiCamera() as camera:
-            camera.start_preview()
+        camera.start_preview()
 
             # Open data file and add header
             with open(os.path.join(sensor_dir, get_curr_time() + ".csv"), mode="w") as file:
@@ -186,7 +203,16 @@ if __name__ == '__main__':
                             # camera.stop_preview()
                             # sys.exit()
                         
-
+    except KeyboardInterrupt:
+        print("\nScript interrupted by user")
+    except Exception as e:
+        print(f"Error occurred: {e}")
     finally:
+        if camera:
+            try:
+                camera.stop_preview()
+                camera.close()
+            except:
+                pass
         GPIO.cleanup()
         sys.exit()
