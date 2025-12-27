@@ -51,21 +51,30 @@ Charger
     BAT+-: Battery
 ```
 
+
 ## Operation
-### Connect to headless RPi
-```
-ssh pi@raspberrypi.local
-password: 0000
-```
 
-### Deploy full capturing and ejection charge
-```
-python rocket_metrics/capture_data_deploy_parachute.py 
-```
+1. Set POWER switch to OFF
+2. *Optional:* Set ARM switch to CHARGE
+3. *Optional:* Connect capacitor leads to 12V (mMotorbike battery)
+4. Set ARM switch to OFF
+5. Set POWER switch to ON
+6. Check RPi/camera/barometer/accelerometer LEDs are on
+7. *Optional:* Set ARM switch to ARM
+8. Connect to headless RPi
+    ```
+    ssh pi@raspberrypi.local
+    password: 0000
+    ```
+9. Deploy full capturing and ejection charge
+    ```
+    python rocket-buds/rocket_metrics/capture_data_deploy_parachute.py 
+    ```
 
+## Miscellaneous functions
 ### Capture sensor & camera data
 ```
-python rocket-buds/rocket_metrics/capture_camera_gyro_temppresaaltitude.py
+python rocket-buds/rocket-buds/rocket_metrics/capture_camera_gyro_temppresaaltitude.py
 ```
 
 ### Capture only video

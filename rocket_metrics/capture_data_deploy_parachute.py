@@ -69,6 +69,13 @@ if __name__ == '__main__':
     GPIO.setup(LED_UP_PIN, GPIO.OUT)
     GPIO.setup(LED_DOWN_PIN, GPIO.OUT)
     GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    
+    # Remove any existing edge detection before adding new one
+    try:
+        GPIO.remove_event_detect(BUTTON_PIN)
+    except:
+        pass
+    
     GPIO.add_event_detect(BUTTON_PIN, GPIO.RISING, callback=button_callback, bouncetime=1000)
 
     try:
