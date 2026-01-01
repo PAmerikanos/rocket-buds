@@ -73,7 +73,7 @@ Charger
 
 ## LED Behavior
 
-The system uses two LEDs (LED_UP on GPIO 16 and LED_DOWN on GPIO 20) to indicate the current state:
+The system uses two LEDs (LED_UP on GPIO 16 and LED_DOWN on GPIO 21) to indicate the current state:
 
 | State | LED_UP | LED_DOWN | Description |
 |-------|--------|----------|-------------|

@@ -25,7 +25,7 @@ PREVIOUS_FLAG = "Standby"
 # GPIO pins
 CHARGE_PIN = 23
 LED_UP_PIN = 16
-LED_DOWN_PIN = 20
+LED_DOWN_PIN = 21
 BUTTON_PIN = 26
 
 def get_curr_time():
