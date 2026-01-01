@@ -220,6 +220,8 @@ if __name__ == '__main__':
                             logging.warning(f"[DEPLOY] Waiting {CHARGE_DELAY_s}s before ignition...")
                             time.sleep(CHARGE_DELAY_s)
                             GPIO.output(CHARGE_PIN,  GPIO.HIGH)
+                            GPIO.output(LED_UP_PIN, GPIO.HIGH)
+                            GPIO.output(LED_DOWN_PIN, GPIO.HIGH)
                             start_spark_time = time.time()
                             logging.critical(f"[IGNITION] *** PARACHUTE DEPLOYMENT INITIATED *** (Duration: {SPARK_DURATION_s}s)")
                             ignition_status = "Start"

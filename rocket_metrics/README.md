@@ -71,6 +71,19 @@ Charger
     python rocket-buds/rocket_metrics/capture_data_deploy_parachute.py 
     ```
 
+## LED Behavior
+
+The system uses two LEDs (LED_UP on GPIO 16 and LED_DOWN on GPIO 20) to indicate the current state:
+
+| State | LED_UP | LED_DOWN | Description |
+|-------|--------|----------|-------------|
+| **Standby** | Blinking | Blinking | Alternating blink (0.5s interval). Waiting for button press to start recording. |
+| **Recording (below safe height)** | OFF | OFF | Recording data but not armed. Altitude < 4.0m (MINIMUM_SAFE_HEIGHT + MEASUREMENT_ERROR). |
+| **Armed & Ascending** | ON | OFF | Rocket is climbing. System armed for parachute deployment. |
+| **Armed & Descending** | OFF | ON | Rocket is descending. Monitoring for deployment trigger. |
+| **Parachute Deployed** | ON | ON | Both LEDs on during ignition sequence (SPARK_DURATION_s). |
+| **Shutdown** | OFF | OFF | System stopped via button press or cleanup. |
+
 ## Miscellaneous functions
 ### Capture sensor & camera data
 ```
